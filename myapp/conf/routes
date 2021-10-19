@@ -12,6 +12,10 @@ GET        /                        App.Index
 ## Post
 GET        /posts                   Post.Index
 
+GET        /posts/new               Post.New
+
+POST        /posts                  Post.Create
+
 # Ignore favicon requests
 GET        /favicon.ico                            404
 
@@ -26,4 +30,4 @@ GET        /public/*filepath        Static.Serve("public")
 #
 # For rapid development uncomment the following to add new controller.action endpoints
 # without having to add them to the routes table.
- *       /:controller/:action                    :controller.:action
+ *                                  /:controller/:action                    :        controller        .:        action

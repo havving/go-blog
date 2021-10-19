@@ -1,9 +1,12 @@
 package controllers
 
+import "C"
 import (
 	db "github.com/revel/modules/db/app"
 	"github.com/revel/revel"
 	"myapp/app/models"
+	"myapp/app/routes"
+	"time"
 )
 
 type Post struct {
@@ -28,4 +31,25 @@ func (c Post) Index() revel.Result {
 	}
 
 	return c.Render(posts)
+}
+
+func (c Post) New() revel.Result {
+	post := models.Post{}
+	return c.Render(post)
+}
+
+func (c Post) Create(title, body string) revel.Result {
+	//  데이터베이스에 포스트 내용 저장
+	_, err := c.Txn.Exec("insert into posts(title, body, created_at, updated_at)"+
+		"values(?,?,?,?", title, body, time.Now(), time.Now())
+
+	if err != nil {
+		panic(err)
+	}
+
+	// 뷰에 Flash 메시지 전달
+	c.Flash.Success("포스트 작성 완료")
+
+	// 포스트 목록 화면으로 이동
+	return c.Redirect(routes.Post.Index())
 }
