@@ -16,6 +16,8 @@ GET        /posts/new               Post.New
 
 POST        /posts                  Post.Create
 
+GET        /posts/:id               Post.Show
+
 # Ignore favicon requests
 GET        /favicon.ico                            404
 

@@ -2,6 +2,8 @@ package controllers
 
 import "C"
 import (
+	"database/sql"
+	"fmt"
 	db "github.com/revel/modules/db/app"
 	"github.com/revel/revel"
 	"myapp/app/models"
@@ -52,4 +54,28 @@ func (c Post) Create(title, body string) revel.Result {
 
 	// 포스트 목록 화면으로 이동
 	return c.Redirect(routes.Post.Index())
+}
+
+func (c Post) Show(id int) revel.Result {
+	post, err := getPost(c.Txn, id)
+	if err != nil {
+		panic(err)
+	}
+
+	return c.Render(post)
+}
+
+func getPost(txn *sql.Tx, id int) (models.Post, error) {
+	post := models.Post{}
+	err := txn.QueryRow("select id, title, body, created_at, updated_at from posts where id=?", id).
+		Scan(&post.Id, &post.Title, &post.Body, &post.CreatedAt, &post.UpdatedAt)
+
+	switch {
+	case err == sql.ErrNoRows:
+		return post, fmt.Errorf("No post with tat ID - %d.", id)
+	case err != nil:
+		return post, err
+	}
+
+	return post, nil
 }

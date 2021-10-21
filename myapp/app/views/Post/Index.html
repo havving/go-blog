@@ -15,8 +15,9 @@
     <tr>
         <th scope="row">{{.Id}}</th>
         <td>{{.Title}}</td>
-        <td><time>{{formatDate .CreatedAt}}</time></td>
-        <td><time>{{formatDate .UpdatedAt}}</time></td>
+        <td><time>{{.CreatedAt}}</time></td>
+        <td><time>{{.UpdatedAt}}</time></td>
+        <td><a href="{{url "Post.Show".Id}}">Show</a></td>
     </tr>
     {{end}}
     </tbody>
